@@ -9,3 +9,13 @@ pipeline:
       - "${DRONE_COMMIT_SHA:0:8}"
       - "${DRONE_TAG}"
     secrets: [ docker_username, docker_password ]
+
+  publish-image-tag:
+    image: plugins/docker
+    repo: sebastianhutter/haproxy
+    dockerfile: Dockerfile
+    tags:
+      - "${DRONE_TAG}"
+    secrets: [ docker_username, docker_password ]
+    when:
+      event: tag
