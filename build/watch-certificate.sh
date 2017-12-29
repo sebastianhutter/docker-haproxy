@@ -9,7 +9,7 @@ CERTIFICATE="${1}"
 CERTIFICATE_DIRECTORY=$(dirname "${CERTIFICATE}")
 
 # if the directory containing the certifciate registers changes
-while inotifywait "${CERTIFICATE_DIRECTORY}"; do
+while inotifywait -e create -e modify -e move -e delete "${CERTIFICATE_DIRECTORY}"; do
     # check if we have letsencrypt files around
     # if so re-recreate the certificate
     # and if not only reload the haproxy config
