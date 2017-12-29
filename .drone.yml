@@ -7,7 +7,6 @@ pipeline:
     tags:
       - "latest"
       - "${DRONE_COMMIT_SHA:0:8}"
-      - "${DRONE_TAG}"
     secrets: [ docker_username, docker_password ]
 
   publish-image-tag:
