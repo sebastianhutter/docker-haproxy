@@ -1,0 +1,11 @@
+pipeline:
+
+  publish-image:
+    image: plugins/docker
+    #username: ${DOCKER_USERNAME}
+    #password: ${DOCKER_PASSWORD}
+    #email: ${DOCKER_EMAIL}
+    repo: sebastianhutter/haproxy
+    dockerfile: Dockerfile
+    tags:
+      - latest
