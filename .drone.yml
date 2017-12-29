@@ -19,5 +19,5 @@ pipeline:
       - "${DRONE_TAG}"
     secrets: [ docker_username, docker_password ]
     when:
-      branch: [master]
       event: tag
+      branch: [master]
