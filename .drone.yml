@@ -5,5 +5,7 @@ pipeline:
     repo: sebastianhutter/haproxy
     dockerfile: Dockerfile
     tags:
-      - latest
+      - "latest"
+      - "${DRONE_COMMIT_SHA:0:8}"
+      - "${DRONE_TAG}"
     secrets: [ docker_username, docker_password ]
