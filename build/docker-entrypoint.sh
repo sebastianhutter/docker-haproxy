@@ -1,12 +1,16 @@
 #!/bin/sh
 set -e
 
-# check if the specified ssl certificate exists.
-# if not create a self signed cert
-if [ ! -f "${SSL_CERTIFICATE}" ]; then
-  # before creating the certificate make sure the subdirectory exists
-  [ -d "$(dirname ${SSL_CERTIFICATE})" ] || mkdir -p $(dirname ${SSL_CERTIFICATE})
 
+# now if we are running inside a letsencrypt dir we gonna have a "fullchain.pem" 
+# and a "privkey.pem" file which we can use instead of generating our own certificate
+if [ -f "$(dirname ${SSL_CERTIFICATE})/fullchain.pem" ] && [ -f "$(dirname ${SSL_CERTIFICATE})/privkey.pem" ]; then
+  cat "$(dirname ${SSL_CERTIFICATE})/fullchain.pem"  "$(dirname ${SSL_CERTIFICATE})/privkey.pem" > "${SSL_CERTIFICATE}" 
+fi
+
+# if there are no letsencrypt files and there is no certificate file we will create our own cert
+if [ ! -f "${SSL_CERTIFICATE}" ]; then
+  [ -d "$(dirname ${SSL_CERTIFICATE})" ] || mkdir -p $(dirname ${SSL_CERTIFICATE})
   openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /tmp/key -out /tmp/certificate -subj "/CN=self-sgined"
   cat /tmp/certificate /tmp/key > ${SSL_CERTIFICATE}
   rm /tmp/certificate /tmp/key
@@ -30,7 +34,7 @@ else
 fi
 
 # reload haproxy if certificate changes
-/reload-haproxy.sh $(dirname ${SSL_CERTIFICATE}) >/dev/null 2>&1 &
+/watch-certificate.sh ${SSL_CERTIFICATE} >/dev/null 2>&1 &
 
 # first arg is `-f` or `--some-option`
 if [ "${1#-}" != "$1" ]; then
