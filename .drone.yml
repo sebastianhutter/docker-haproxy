@@ -10,6 +10,8 @@ pipeline:
     secrets: [ docker_username, docker_password ]
     when:
       branch: [master]
+      event: 
+        exclude: [tag]
 
   publish-image-tag:
     image: plugins/docker
@@ -17,7 +19,8 @@ pipeline:
     dockerfile: Dockerfile
     tags:
       - "${DRONE_TAG}"
+      - "${DRONE_COMMIT_SHA:0:8}"
+      - "latest"
     secrets: [ docker_username, docker_password ]
     when:
       event: tag
-      branch: [master]
