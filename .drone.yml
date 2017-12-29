@@ -9,3 +9,4 @@ pipeline:
     dockerfile: Dockerfile
     tags:
       - latest
+    secrets: [ docker_username, docker_password ]
